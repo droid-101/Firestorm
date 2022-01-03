@@ -565,7 +565,7 @@ function startServer()
 				commandOutput = (`${data}`);
 				console.log(commandOutput);
 				sendTerminalOutput(commandOutput);
-				DiscordBot.forward_chat(commandOutput)
+				//DiscordBot.forward_chat(commandOutput)
 			});
 
 			server.stderr.on('data', (data) => {

@@ -7,11 +7,11 @@ const LOGS_FILE = MCSERVER + "/server/logs/latest.txt"
 
 CHANNEL_IDS = {
 	'announcements': "837407841220165652",
-	'chat': "837391785768255488"
+	//'chat': "837391785768255488"
 }
 
 var announcements = null;
-var chat = null;
+//var chat = null;
 
 module.exports = {
 	connect: function()
@@ -46,7 +46,7 @@ module.exports = {
 
 		tokens = log.split(' ');
 
-		if (!tokens[3].startsWith('<'))
+		if (!tokens[3].startsWith('<'))  // FIXME: Breaks on server startup
 		{
 			return;   // this was not a chat log
 		}
@@ -64,7 +64,7 @@ client.on('ready', function()
 
 	const channels = client.channels.cache;
 	announcements = channels.get(CHANNEL_IDS['announcements']);
-	chat = channels.get(CHANNEL_IDS['chat']);
+	//chat = channels.get(CHANNEL_IDS['chat']);
 });
 
 client.on('disconnect', function()

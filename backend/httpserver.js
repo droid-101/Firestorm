@@ -932,7 +932,9 @@ function checkIP()
 					}
 
 					properties = JSON.parse(propertiesToJSON(data.toString()))
-					DiscordBot.send_announcement(util.format("The IP address has changed to `%s`\nServer IP: `%s:%s`\nWebsite URL: `http://%s/mcserver`", newest, newest, properties['server-port'], newest));
+					mcserver = util.format("`%s:%s`", newest, properties['server-port'])
+					website = util.format("`http://%s/mcserver`", newest);
+					DiscordBot.send_announcement(util.format("The IP address has changed.\nServer: `%s`\nWebsite: %s", mcserver, website));
 				});
 			});
 		});

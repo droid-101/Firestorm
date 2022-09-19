@@ -7,10 +7,12 @@ const LOGS_FILE = MCSERVER + "/server/logs/latest.txt"
 
 CHANNEL_IDS = {
 	'announcements': "837407841220165652",
+	'test': "1021487591566102718",
 	//'chat': "837391785768255488"
 }
 
 var announcements = null;
+var test = null;
 //var chat = null;
 
 module.exports = {
@@ -34,6 +36,17 @@ module.exports = {
 		}
 
 		announcements.send(message)
+	},
+
+	send_test: function(message)
+	{
+		if (test == null)
+		{
+			console.log("The test channel was not acquired")
+			return;
+		}
+
+		test.send(message)
 	},
 
 	forward_chat: function(log)
@@ -64,6 +77,7 @@ client.on('ready', function()
 
 	const channels = client.channels.cache;
 	announcements = channels.get(CHANNEL_IDS['announcements']);
+	test = channels.get(CHANNEL_IDS['test']);
 	//chat = channels.get(CHANNEL_IDS['chat']);
 });
 

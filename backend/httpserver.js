@@ -556,10 +556,10 @@ function startServer()
 
 			ram = (data.toString());
 
-			server = spawn('java', ['-Xmx' + ram + "M", '-Xms' + ram + "M", '-jar', 'server.jar', 'nogui']);
+			server = spawn('java', ['-Xmx' + ram + "G", '-Xms' + ram + "G", '-jar', 'server.jar', 'nogui']);
 
 			server.stdin.setEncoding('utf-8');
-			console.log("Minecraft server starting with " + ram + " of RAM");
+			console.log("Minecraft server starting with " + ram + " GB of RAM");
 
 			server.stdout.on('data', (data) => {
 				commandOutput = (`${data}`);

@@ -231,14 +231,12 @@ function getStatus()
 
 function setValue(value)
 {
-	value = Math.trunc(value / 1024) * 1024;
-	document.getElementById("allocated-ram").innerHTML = "Allocated RAM: " + value + "MB (" + Math.trunc(value / 1024) + "GB)";
+	document.getElementById("allocated-ram").innerHTML = "Allocated RAM: " + value + "GB";
 }
 
 function sendRAM()
 {
 	let value = document.getElementById("slider").value;
-	value = Math.trunc(value / 1024) * 1024;
 	sendData("ram", value.toString());
 }
 
@@ -247,7 +245,7 @@ function getRAM()
 	requestData("ram",
 		function(target)
 		{
-			document.getElementById("allocated-ram").innerHTML = "Allocated RAM: " + target  + "MB (" + target[0] + "GB)";
+			document.getElementById("allocated-ram").innerHTML = "Allocated RAM: " + target  + "GB";
 			document.getElementById("slider").value = target;
 		}
 	);

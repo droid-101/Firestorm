@@ -296,26 +296,37 @@ function requestHandler(request, response)
 				}
 				else if (target == "/shutdown")
 				{
-					if (serverRunning())
-					{
-						serverCommand("/say The server is shutting down for the day");
-						serverCommand("/say All players will be disconnected in " + (SHUTDOWN_DELAY_MS / 1000) + " seconds");
-					}
-
+					// Stop web server to prevent further requests.
 					privateWebsite.close();
 					publicWebsite.close();
 					DiscordBot.disconnect();
 
-					setTimeout(function()
+					if (serverRunning())
 					{
-						stopServer();
-						console.log("Waiting for Minecraft server to stop");
-						while (serverRunning());
-						console.log("Shutting down Firestorm");
-						exec('sudo shutdown', function(error, stdout, stderr){ console.log(stdout); });
-						// The server will power off 1 minute after executing 'sudo shutdown'
+						// Notify players who are online.
+						serverCommand("/say The server is shutting down for the day.");
+						serverCommand("/say All players will be disconnected in " + (SHUTDOWN_DELAY_MS / 1000) + " seconds.");
+						serverCommand("/say Thanks for playing!  See you tomorrow.");
+
+						setTimeout(function()
+						{
+							// Stop the Minecraft server.
+							stopServer();
+							console.log("Waiting for Minecraft server to stop");
+							while (serverRunning());
+
+							// Power off Firestorm 1 minute after executing 'sudo shutdown'
+							console.log("Shutting down Firestorm in 1 minute");
+							exec('sudo shutdown', function(error, stdout, stderr){ console.log(stdout); });
+						}
+						, SHUTDOWN_DELAY_MS);
 					}
-					, SHUTDOWN_DELAY_MS);
+					else
+					{
+						// Power off Firestorm immediately if the Minecraft server is not running.
+						console.log("Shutting down Firestorm now");
+						exec('sudo shutdown now', function(error, stdout, stderr){ console.log(stdout); });
+					}
 				}
 			}
 		);

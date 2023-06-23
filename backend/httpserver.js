@@ -566,7 +566,7 @@ function startServer()
 			xms = INITIAL_RAM_GB.toString();
 			xmx = ram
 
-			server = spawn('java', ['-Xmx' + xms + "G", '-Xms' + xmx + "G", '-jar', 'server.jar', 'nogui']);
+			server = spawn('java', ['-Xms' + xms + "G", '-Xmx' + xmx + "G", '-jar', 'server.jar', 'nogui']);
 
 			server.stdin.setEncoding('utf-8');
 			console.log("Minecraft server starting with " + xms + "/" + xmx + " GB of RAM");

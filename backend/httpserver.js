@@ -7,11 +7,11 @@ const exec = require('child_process').exec;
 const WebSocket = require('ws');
 const DiscordBot = require('./discord-bot');
 const util = require('util');
-
+const INITIAL_RAM_GB = 4
+const MAX_RAM_GB = 14
 const PRIVATE_PORT = 8080;
 const PUBLIC_PORT = 8000;
 const SHUTDOWN_DELAY_MS = 30000;   // Wait 10s before stopping server and shutting down
-
 const MCSERVER = process.env.MCSERVER
 
 var server = null;
@@ -554,12 +554,22 @@ function startServer()
 				return console.log(err);
 			}
 
-			ram = (data.toString());
+			ram = data.toString();
 
-			server = spawn('java', ['-Xmx' + ram + "G", '-Xms' + ram + "G", '-jar', 'server.jar', 'nogui']);
+			if (parseInt(ram) > MAX_RAM_GB || parseInt(ram) < 0)
+			{
+				console.warn("Invalid RAM setting '" + ram + " GB'");
+				ram = INITIAL_RAM_GB.toString()
+				console.warn("Defaulting to " + ram + " GB of RAM");
+			}
+
+			xms = INITIAL_RAM_GB.toString();
+			xmx = ram
+
+			server = spawn('java', ['-Xms' + xms + "G", '-Xmx' + xmx + "G", '-jar', 'server.jar', 'nogui']);
 
 			server.stdin.setEncoding('utf-8');
-			console.log("Minecraft server starting with " + ram + " GB of RAM");
+			console.log("Minecraft server starting with " + xms + "/" + xmx + " GB of RAM");
 
 			server.stdout.on('data', (data) => {
 				commandOutput = (`${data}`);

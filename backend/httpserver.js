@@ -296,6 +296,12 @@ function requestHandler(request, response)
 				}
 				else if (target == "/shutdown")
 				{
+					if (backingUp)
+					{
+						console.error("Cannot shut down while worlds are backing up");
+						return;
+					}
+
 					// Stop web server to prevent further requests.
 					privateWebsite.close();
 					publicWebsite.close();
@@ -304,6 +310,7 @@ function requestHandler(request, response)
 					if (serverRunning())
 					{
 						// Notify players who are online.
+						console.log("Minecraft server is running.  Notify all players of shutdown.");
 						serverCommand("/say The server is shutting down for the day.");
 						serverCommand("/say All players will be disconnected in " + (SHUTDOWN_DELAY_MS / 1000) + " seconds.");
 						serverCommand("/say Thanks for playing!  See you tomorrow.");
@@ -315,7 +322,7 @@ function requestHandler(request, response)
 							console.log("Waiting for Minecraft server to stop");
 							while (serverRunning());
 
-							// Power off Firestorm 1 minute after executing 'sudo shutdown'
+							// Power off Firestorm 1 minute after executing 'sudo shutdown' to give the system time to settle.
 							console.log("Shutting down Firestorm in 1 minute");
 							exec('sudo shutdown', function(error, stdout, stderr){ console.log(stdout); });
 						}
@@ -324,6 +331,7 @@ function requestHandler(request, response)
 					else
 					{
 						// Power off Firestorm immediately if the Minecraft server is not running.
+						console.log("Minecraft server is not running");
 						console.log("Shutting down Firestorm now");
 						exec('sudo shutdown now', function(error, stdout, stderr){ console.log(stdout); });
 					}
